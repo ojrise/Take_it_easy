@@ -26,6 +26,7 @@ class Brett:
        Første element i listen er brikken øverst til venstre også går den oppover skrått mot venstre'''
     def __init__(self) -> None:
         self.brett_liste = [ [None]*3, [None]*4, [None]*5, [None]*4, [None]*3 ]
+        self.points = 0 #i funksjonen som skal telle alle poengene må jeg huske på å sette self.points = 0
 
     def add_brikke(self, rad, kolonne, brikke:Brikke):
         if type(brikke) != Brikke:
@@ -37,17 +38,46 @@ class Brett:
             #jeg bør nok lage en annen error en dette, slik at den kan fortsette å prøve å legge på plass
             raise IndexError('Det ligger en brikke på rad {}, kolonne {} fra før'.format(rad,kolonne))
 
+    
+    #lager en funksjone for å telle poeng diagonal_1
+    def count_diagonal_1(self):
+        count = 0
+        diag_sum = 0
+        for del_list in self.brett_liste:
+            if type(del_list[0]) == Brikke:
+                første_verdi_diag = del_list[0].diagonal_1
+            else: første_verdi_diag = -1 #Hvis det ikke ligger en brikke der bruker jeg denne logikken 
+            
+            for brikke in del_list:
+                if type(brikke) == Brikke:
+                    count = brikke.diagonal_1
+                else: count = 0
+
+                #sjekker om verdiene i raden er lik. Disse vil også være ulike hvis det ikke er noen brikke der    
+                if count == første_verdi_diag: 
+                    diag_sum += count
+                else:
+                    diag_sum = 0
+                    break
+
+            self.points += diag_sum #Oppdaterer poengene
+
+
+
 
 def main():
-    brikke1 = Brikke(1,6,8)
-
+    brikke1 = Brikke(1,2,8)
     brikke2 = Brikke(9,2,3)
+    brikke3 = Brikke(5,2,4)
 
     brett = Brett()
-    brett.add_brikke(1,2,brikke2)
-    brett.add_brikke(2,2,brikke1)
+    brett.add_brikke(0,0,brikke1)
+    brett.add_brikke(0,1,brikke2)
+    brett.add_brikke(0,2,brikke3)
 
-    print(brett.brett_liste[1][2].loddrett)
+    #print(brett.brett_liste)
+    brett.count_diagonal_1()
+    print(brett.points)
 
 if __name__ == '__main__':
 	main()
