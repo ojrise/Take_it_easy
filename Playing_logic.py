@@ -71,8 +71,6 @@ class Brett:
                           [  L[0][2], L[1][2], L[2][2], L[3][1], L[4][0]  ],
                           [  L[1][3], L[2][3], L[3][2], L[4][1]  ],
                           [  L[2][4],L[3][3], L[4][2]  ]  ]
-        #print(loddrett_list)
-
         count = 0
         diag_sum = 0
         for del_list in loddrett_list:
@@ -94,23 +92,57 @@ class Brett:
 
             self.points += diag_sum #Oppdaterer poengene
 
+    def count_diagonal_2(self):
+        #lager en ny liste slik at jeg kan bruke samme logikk som for diagonal_1
+        L = self.brett_liste
+        diagonal_2_list=[ [  L[0][2],L[1][3], L[2][4]  ], 
+                          [  L[0][1], L[1][2], L[2][3], L[3][3]  ],
+                          [  L[0][0], L[1][1], L[2][2], L[3][2], L[4][2]  ],
+                          [  L[1][0], L[2][1], L[3][1], L[4][1]  ],
+                          [  L[2][0],L[3][0], L[4][0]  ]  ]
+        count = 0
+        diag_sum = 0
+        for del_list in diagonal_2_list:
+            if type(del_list[0]) == Brikke:
+                første_verdi_diag = del_list[0].diagonal_2
+            else: første_verdi_diag = -1 #Hvis det ikke ligger en brikke der bruker jeg denne logikken 
+            
+            for brikke in del_list:
+                if type(brikke) == Brikke:
+                    count = brikke.diagonal_2
+                else: count = 0
 
+                #sjekker om verdiene i raden er lik. Disse vil også være ulike hvis det ikke er noen brikke der    
+                if count == første_verdi_diag: 
+                    diag_sum += count
+                else:
+                    diag_sum = 0
+                    break
+
+            self.points += diag_sum #Oppdaterer poengene
+
+    def count_points(self):
+        self.points = 0
+        self.count_diagonal_1()
+        self.count_diagonal_2()
+        self.count_loddrett()
 
 def main():
-    brikke1 = Brikke(9,2,8)
+    brikke1 = Brikke(9,2,3)
     brikke2 = Brikke(9,2,3)
-    brikke3 = Brikke(5,2,4)
+    brikke3 = Brikke(5,7,3)
 
     brett = Brett()
-    brett.add_brikke(0,0,brikke1)
-    brett.add_brikke(0,1,brikke2)
-    brett.add_brikke(1,0,brikke2)
+    #brett.add_brikke(0,0,brikke1)
+    #brett.add_brikke(0,1,brikke2)
+    #brett.add_brikke(1,0,brikke2)
     brett.add_brikke(0,2,brikke2)
-    brett.add_brikke(2,0,brikke3)
+    #brett.add_brikke(2,0,brikke3)
+    brett.add_brikke(1,3,brikke1)
+    brett.add_brikke(2,4,brikke3)
 
-    #print(brett.brett_liste)
-    brett.count_diagonal_1()
-    brett.count_loddrett()
+    brett.count_points()
+    brett.count_points()
     print(brett.points)
 
 if __name__ == '__main__':
